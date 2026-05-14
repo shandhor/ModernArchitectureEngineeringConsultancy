@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>STUDIO — Architecture</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<style>
+/* ============== RESET & BASE ============== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+:root {
+    --bg: #1a1a1a;
+    --bg-2: #111;
+    --text: #fff;
+    --muted: #7e8288;
+    --accent: #c9a96e;
+    --border: #2a2a2a;
+    --max: 1600px;
+    --pad: 60px;
+}
+body {
+    font-family: 'Jost', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; color: inherit; cursor: pointer; font: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; display: block; }
+
+/* ============== HEADER ============== */
+.header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 36px var(--pad);
+}
+.header-wrapper {
+    max-width: var(--max);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.home-link { display: flex; align-items: center; gap: 14px; }
+.logo-mark { width: 64px; height: 46px; }
+.logo-mark path { fill: #fff; }
+.logo-wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    letter-spacing: 10px;
+    font-weight: 400;
+}
+.main-nav ul { display: flex; gap: 48px; }
+.nav__link {
+    font-size: 13px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+    position: relative;
+    padding: 4px 0;
+    transition: color 0.3s;
+}
+.nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+}
+.nav__link:hover { color: var(--accent); }
+.nav__link:hover::after { width: 100%; }
+.navbar-toggle-wrapper { display: flex; align-items: center; gap: 32px; }
+.menu-lang { display: flex; align-items: center; gap: 10px; }
+.menu-lang__icon { width: 21px; height: 22px; }
+.menu-lang__icon path { stroke: #fff; stroke-width: 1.5; fill: none; }
+.menu-lang__options { display: flex; gap: 6px; font-size: 13px; letter-spacing: 1px; }
+.menu-lang__option { cursor: pointer; opacity: 0.5; transition: opacity 0.3s; }
+.menu-lang__option.active { opacity: 1; }
+.menu-lang__divider { opacity: 0.5; }
+.navbar-toggle { display: flex; flex-direction: column; gap: 6px; cursor: pointer; padding: 6px; }
+.navbar-toggle .line { width: 28px; height: 1.5px; background: #fff; transition: 0.3s; }
+
+/* ============== HERO ============== */
+.home-section { position: relative; height: 100vh; min-height: 700px; overflow: hidden; }
+.home__bg-slide-clip { position: absolute; inset: 0; z-index: 1; }
+.home__bg-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+}
+.home__bg-slide.active { opacity: 1; }
+.home__bg-slide.active .home__bg-slide-front-image { transform: scale(1.08); }
+.home__bg-slide-front-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 8s ease-out;
+}
+.home__bg-slide-clip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.75) 100%);
+    z-index: 2;
+}
+.home__content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--pad);
+    display: flex;
+    align-items: center;
+}
+.hero { max-width: 720px; }
+.hero__sub-title {
+    font-size: 13px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    color: var(--accent);
+    opacity: 0;
+    animation: fadeUp 1.2s 0.3s forwards;
+}
+.hero__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(72px, 10vw, 156px);
+    line-height: 0.92;
+    letter-spacing: -3px;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 1.4s 0.5s forwards;
+}
+.hero__action { opacity: 0; animation: fadeUp 1.2s 0.9s forwards; }
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.explore-project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #fff;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.35);
+    transition: 0.4s;
+}
+.explore-project-link:hover { color: var(--accent); border-bottom-color: var(--accent); gap: 24px; }
+.explore-project-link__chevron { width: 14px; }
+
+.home__action {
+    position: absolute;
+    right: var(--pad);
+    bottom: 140px;
+    z-index: 4;
+    width: 96px;
+    height: 96px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.4);
+    transition: 0.4s;
+}
+.home__action:hover { border-color: var(--accent); transform: translateY(-4px); }
+.home__action__bg { position: absolute; inset: 0; }
+.home__action__bg img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.6s;
+}
+.home__action__bg img.active { opacity: 1; }
+.home__action__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 1;
+}
+.home__action__icon { position: absolute; inset: 0; margin: auto; z-index: 2; width: 36px; height: 36px; }
+
+.scroll-down { position: absolute; left: var(--pad); bottom: 48px; z-index: 4; }
+.scroll-down svg { width: 28px; height: 44px; }
+.mouse-wheel { animation: wheel 1.8s ease-in-out infinite; }
+@keyframes wheel {
+    0% { transform: translateY(-4px); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: translateY(6px); opacity: 0; }
+}
+
+/* ============== ABOUT US ============== */
+.about-us-section {
+    padding: 180px var(--pad);
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 100px;
+    align-items: center;
+}
+.about-us__main { padding-right: 40px; }
+.about-us__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(64px, 7vw, 104px);
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 48px;
+}
+.about-us__main-text {
+    font-size: 16px;
+    line-height: 2;
+    color: rgba(255,255,255,0.78);
+    margin-bottom: 48px;
+    max-width: 520px;
+}
+.about-us__main-text span {
+    display: block;
+    margin-top: 20px;
+    color: rgba(255,255,255,0.55);
+    font-size: 15px;
+}
+.button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 18px 40px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    overflow: hidden;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: color 0.4s;
+    z-index: 1;
+}
+.button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s ease;
+    z-index: -1;
+}
+.button:hover { color: #1a1a1a; }
+.button:hover::before { transform: scaleX(1); transform-origin: left; }
+
+.about-us__images { position: relative; height: 680px; }
+.about-us__image-wrapper { position: absolute; overflow: hidden; }
+.about-us__image-wrapper--left { width: 58%; height: 380px; top: 0; left: 0; z-index: 2; }
+.about-us__image-wrapper--right { width: 68%; height: 460px; bottom: 0; right: 0; z-index: 1; }
+.about-us__image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1s ease;
+}
+.about-us__image-wrapper:hover img { transform: scale(1.06); }
+
+/* ============== SERVICES ============== */
+.our-services-section { background: var(--bg-2); padding: 180px var(--pad); position: relative; }
+.our-services__content {
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 100px;
+    align-items: center;
+}
+.our-services__left { display: flex; flex-direction: column; }
+.our-services__texts { margin-bottom: 60px; }
+.our-services__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(52px, 5.5vw, 88px);
+    line-height: 1;
+    margin-bottom: 16px;
+    letter-spacing: -1.5px;
+}
+.our-services__sub-title {
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+.our-services__slide__item-info-area { position: relative; min-height: 240px; }
+.our-services__slide__item-info {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+    pointer-events: none;
+}
+.our-services__slide__item-info.selected {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.our-services__slide__item-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 42px;
+    margin-bottom: 24px;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+}
+.our-services__slide__item-description {
+    font-size: 15px;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.72);
+    max-width: 500px;
+}
+.our-services__slide-buttons { margin-top: 50px; display: flex; gap: 14px; }
+.our-services__slide-buttons button {
+    width: 58px;
+    height: 58px;
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+.our-services__slide-buttons button:hover { background: var(--accent); border-color: var(--accent); }
+.our-services__slide-button-icon { width: 22px; height: 22px; }
+.our-services__slide-buttons button:hover .our-services__slide-button-icon path { stroke: #1a1a1a; }
+.our-services__slide-button-icon path { stroke: #fff; transition: stroke 0.3s; }
+
+.our-services__slide { position: relative; height: 580px; overflow: hidden; }
+.our-services__slide__item {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(1.05);
+    transition: opacity 0.9s, transform 1.3s ease-out;
+}
+.our-services__slide__item.selected { opacity: 1; transform: scale(1); }
+.our-services__slide__item img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ============== PORTFOLIO ============== */
+.our-portifolio-section { background: var(--bg); padding: 180px 0 140px; overflow: hidden; }
+.our-portifolio__texts { text-align: center; margin-bottom: 100px; padding: 0 var(--pad); }
+.our-portifolio__sub-title {
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-bottom: 16px;
+}
+.our-portifolio__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(56px, 6vw, 96px);
+    letter-spacing: -1.5px;
+}
+
+.carousel-wrapper { padding: 0 0 60px; overflow: visible; }
+.carousel__item {
+    width: 420px;
+    position: relative;
+    transition: transform 0.6s ease, opacity 0.6s ease;
+    opacity: 0.4;
+    transform: scale(0.88);
+}
+.swiper-slide-active.carousel__item { opacity: 1; transform: scale(1); z-index: 2; }
+.carousel__item__project-link { display: block; overflow: hidden; height: 600px; position: relative; }
+.our-portifolio__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.4s ease;
+}
+.swiper-slide-active .our-portifolio__image:hover { transform: scale(1.05); }
+
+.carousel__item__inner-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 40px 36px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.92) 100%);
+    color: #fff;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: none;
+}
+.swiper-slide-active .carousel__item__inner-info {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.carousel__item__project-type {
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 10px;
+}
+.carousel__item__project-description {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 32px;
+    margin-bottom: 22px;
+    letter-spacing: -0.5px;
+}
+.carousel__item__background-pattern {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 60px;
+    height: 44px;
+    opacity: 0.25;
+}
+.carousel__item__background-pattern path { fill: #fff; }
+
+.carousel__timing-bar {
+    max-width: 420px;
+    margin: 0 auto;
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+    position: relative;
+    overflow: hidden;
+}
+.carousel__timing-bar::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    width: var(--progress, 0%);
+    background: var(--accent);
+    transition: width 0.05s linear;
+}
+
+/* ============== CONTACT ============== */
+.contact-section { background: var(--bg-2); padding: 180px var(--pad); }
+.contact-section__content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 120px;
+    align-items: start;
+}
+.contact-form { display: grid; gap: 28px; }
+.contact-form__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 56px;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+}
+.input { display: block; position: relative; }
+.input__control {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    padding: 18px 0;
+    color: #fff;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.3s;
+    outline: none;
+}
+.input__control::placeholder { color: rgba(255,255,255,0.45); letter-spacing: 0.5px; }
+.input__control:focus { border-bottom-color: var(--accent); }
+textarea.input__control { resize: vertical; min-height: 100px; }
+.contact-form__submit-button { margin-top: 16px; justify-self: start; }
+
+.contact__address-section { font-style: normal; }
+.contact__address-section h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 40px;
+    margin-bottom: 28px;
+}
+.contact__address {
+    color: rgba(255,255,255,0.65);
+    line-height: 2;
+    margin-bottom: 28px;
+    font-size: 14px;
+}
+.contact__info-line {
+    display: block;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+.contact__info-line:hover { color: var(--accent); }
+
+/* ============== FOOTER ============== */
+.footer-container {
+    background: var(--bg-2);
+    padding: 100px var(--pad) 40px;
+    border-top: 1px solid var(--border);
+}
+.footer {
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1.4fr 0.6fr;
+    gap: 80px;
+    margin-bottom: 60px;
+}
+.footer__logo { margin-bottom: 28px; display: flex; align-items: center; gap: 12px; }
+.footer__logo__icon { width: 60px; height: 44px; }
+.footer__logo__icon path { fill: #fff; }
+.footer__about {
+    color: rgba(255,255,255,0.55);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+}
+.footer__section-title {
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 28px;
+}
+.footer-nav__link-list { display: grid; gap: 14px; }
+.footer-nav__link {
+    color: rgba(255,255,255,0.7);
+    transition: color 0.3s;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+.footer-nav__link:hover { color: var(--accent); }
+.footer__tel, .footer__email {
+    display: block;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 10px;
+    font-size: 13px;
+    transition: color 0.3s;
+}
+.footer__tel:hover, .footer__email:hover { color: var(--accent); }
+.footer__address {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    line-height: 1.9;
+    margin-top: 18px;
+}
+.social-medias {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: flex-end;
+}
+.social-medias a {
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+.social-medias a:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+.social-medias__icon { width: 14px; height: 14px; fill: rgba(255,255,255,0.7); transition: fill 0.3s; }
+.social-medias a:hover .social-medias__icon { fill: #1a1a1a; }
+
+.footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+    text-align: center;
+    color: rgba(255,255,255,0.35);
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+/* ============== ANIMATIONS ============== */
+.js_animate-on-viewport {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1.1s ease, transform 1.1s ease;
+}
+.js_animate-on-viewport.in-view { opacity: 1; transform: translateY(0); }
+
+/* ============== RESPONSIVE ============== */
+@media (max-width: 1100px) {
+    :root { --pad: 32px; }
+    .main-nav { display: none; }
+    .about-us-section { grid-template-columns: 1fr; gap: 80px; padding: 120px var(--pad); }
+    .about-us__main { padding-right: 0; }
+    .our-services__content { grid-template-columns: 1fr; gap: 60px; }
+    .our-services-section { padding: 120px var(--pad); }
+    .contact-section__content { grid-template-columns: 1fr; gap: 60px; }
+    .contact-section { padding: 120px var(--pad); }
+    .footer { grid-template-columns: 1fr 1fr; gap: 48px; }
+    .social-medias { flex-direction: row; }
+    .carousel__item { width: 340px; }
+    .carousel__item__project-link { height: 480px; }
+}
+@media (max-width: 600px) {
+    .hero__title { font-size: clamp(56px, 16vw, 96px); }
+    .about-us__images { height: 540px; }
+    .footer { grid-template-columns: 1fr; }
+    .home__action { width: 76px; height: 76px; bottom: 110px; }
+    .carousel__item { width: 280px; }
+    .carousel__item__project-link { height: 400px; }
+    .our-services__slide { height: 440px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============== HEADER ============== -->
+<header class="header">
+    <div class="header-wrapper">
+        <a href="#home" class="home-link" aria-label="Home">
+            <svg class="logo-mark" viewBox="0 0 107 78" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 78 L0 60 Q0 48 14 48 L18 48 L18 78 Z"/>
+                <path d="M30 78 L30 0 L48 0 L48 78 Z"/>
+                <path d="M60 78 L60 16 Q60 0 76 0 L78 0 L78 78 Z"/>
+                <path d="M89 78 L89 0 L107 0 L107 78 Z"/>
+            </svg>
+            <span class="logo-wordmark">[ STUDIO NAME ]</span>
+        </a>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a class="nav__link" href="#portfolio">Projects</a></li>
+                <li><a class="nav__link" href="#about">About</a></li>
+                <li><a class="nav__link" href="#contact">Contact</a></li>
+                <li><a class="nav__link" href="#">Media</a></li>
+            </ul>
+        </nav>
+
+        <div class="navbar-toggle-wrapper">
+            <div class="menu-lang">
+                <svg class="menu-lang__icon" viewBox="0 0 21 22" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.5 19.75c4.83 0 8.75-3.92 8.75-8.75S15.33 2.25 10.5 2.25 1.75 6.17 1.75 11s3.92 8.75 8.75 8.75z"/>
+                    <path d="M10.05 19.74c-2.16-2.27-3.49-5.35-3.49-8.74s1.33-6.46 3.49-8.74"/>
+                    <path d="M10.94 19.74c2.16-2.27 3.49-5.35 3.49-8.74S13.1 4.54 10.94 2.26"/>
+                    <path d="M17.53 16.21c-1.86-1.33-4.33-2.14-7.03-2.14s-5.17.81-7.03 2.14"/>
+                    <path d="M3.47 5.79c1.86 1.33 4.33 2.14 7.03 2.14s5.17-.81 7.03-2.14"/>
+                </svg>
+                <div class="menu-lang__options">
+                    <span class="menu-lang__option active">en</span>
+                    <span class="menu-lang__divider">|</span>
+                    <span class="menu-lang__option">ar</span>
+                </div>
+            </div>
+            <button class="navbar-toggle" aria-label="Menu">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section id="home" class="home-section">
+    <div class="home__bg-slide-clip">
+        <div class="home__bg-slide active" data-subtitle="[ Featured Project 01 ]" style="background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80')">
+            <div class="home__bg-slide-front-image" style="background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80')"></div>
+        </div>
+        <div class="home__bg-slide" data-subtitle="[ Featured Project 02 ]" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80')">
+            <div class="home__bg-slide-front-image" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80')"></div>
+        </div>
+        <div class="home__bg-slide" data-subtitle="[ Featured Project 03 ]" style="background-image: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80')">
+            <div class="home__bg-slide-front-image" style="background-image: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80')"></div>
+        </div>
+        <div class="home__bg-slide" data-subtitle="[ Featured Project 04 ]" style="background-image: url('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1920&q=80')">
+            <div class="home__bg-slide-front-image" style="background-image: url('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1920&q=80')"></div>
+        </div>
+        <div class="home__bg-slide" data-subtitle="[ Featured Project 05 ]" style="background-image: url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1920&q=80')">
+            <div class="home__bg-slide-front-image" style="background-image: url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1920&q=80')"></div>
+        </div>
+    </div>
+
+    <div class="home__content">
+        <div class="hero">
+            <p class="hero__sub-title" id="hero-subtitle">[ Featured Project 01 ]</p>
+            <h1 class="hero__title">[ Studio<br>tagline<br>here ]</h1>
+            <a href="#portfolio" class="explore-project-link hero__action">
+                Explore the project
+                <svg class="explore-project-link__chevron" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+        </div>
+    </div>
+
+    <button class="home__action" id="js_bg-slide-button" aria-label="Next slide">
+        <svg class="home__action__icon" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="home__action__bg">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200&q=80" class="active" alt="">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=200&q=80" alt="">
+            <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=200&q=80" alt="">
+            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=200&q=80" alt="">
+            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=200&q=80" alt="">
+        </div>
+    </button>
+
+    <div class="scroll-down">
+        <svg viewBox="0 0 32 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="30" height="49" rx="15" stroke="#fff" stroke-width="2" fill="none"/>
+            <rect class="mouse-wheel" x="14" y="10" width="4" height="10" rx="2" fill="#fff"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ============== ABOUT US ============== -->
+<section id="about" class="about-us-section">
+    <div class="about-us__main js_animate-on-viewport">
+        <h2 class="about-us__title">About Us</h2>
+        <p class="about-us__main-text">
+            [ Replace this with the studio's headline statement — the one-sentence positioning that introduces who they are. ]
+            <span>[ Replace this paragraph with the studio's longer description — their approach, their philosophy, the materials they work with, the markets they serve. Keep it around 3-5 lines for the proportions to look right. ]</span>
+        </p>
+        <a href="#about" class="button">Know us more</a>
+    </div>
+
+    <div class="about-us__images js_animate-on-viewport">
+        <div class="about-us__image-wrapper about-us__image-wrapper--left">
+            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=900&q=80" alt="">
+        </div>
+        <div class="about-us__image-wrapper about-us__image-wrapper--right">
+            <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=900&q=80" alt="">
+        </div>
+    </div>
+</section>
+
+<!-- ============== SERVICES ============== -->
+<section class="our-services-section">
+    <div class="our-services__content">
+        <div class="our-services__left js_animate-on-viewport">
+            <div class="our-services__texts">
+                <h2 class="our-services__title">Our Services</h2>
+                <p class="our-services__sub-title">What we offer</p>
+            </div>
+
+            <div class="our-services__slide__item-info-area">
+                <div class="our-services__slide__item-info selected">
+                    <h3 class="our-services__slide__item-title">[ Service One ]</h3>
+                    <p class="our-services__slide__item-description">[ Replace with description of first service — what's included, what makes the studio's approach distinct, who it's for. ]</p>
+                </div>
+                <div class="our-services__slide__item-info">
+                    <h3 class="our-services__slide__item-title">[ Service Two ]</h3>
+                    <p class="our-services__slide__item-description">[ Replace with description of second service. ]</p>
+                </div>
+                <div class="our-services__slide__item-info">
+                    <h3 class="our-services__slide__item-title">[ Service Three ]</h3>
+                    <p class="our-services__slide__item-description">[ Replace with description of third service. ]</p>
+                </div>
+            </div>
+
+            <div class="our-services__slide-buttons">
+                <button id="js_button-prev-item" aria-label="Previous">
+                    <svg class="our-services__slide-button-icon" viewBox="0 0 48 48" fill="none"><path d="M38 24H10M20 14L10 24l10 10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button id="js_button-next-item" aria-label="Next">
+                    <svg class="our-services__slide-button-icon" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="our-services__slide js_animate-on-viewport">
+            <div class="our-services__slide__item selected">
+                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80" alt="">
+            </div>
+            <div class="our-services__slide__item">
+                <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&q=80" alt="">
+            </div>
+            <div class="our-services__slide__item">
+                <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&q=80" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============== PORTFOLIO ============== -->
+<section id="portfolio" class="our-portifolio-section">
+    <div class="our-portifolio__texts js_animate-on-viewport">
+        <p class="our-portifolio__sub-title">Selected work</p>
+        <h2 class="our-portifolio__title">Our Portfolio</h2>
+    </div>
+
+    <div class="carousel-wrapper swiper portfolio-swiper">
+        <ul class="swiper-wrapper">
+            <!-- 7 portfolio cards — all replaceable -->
+            <li class="swiper-slide carousel__item">
+                <a href="#" class="carousel__item__project-link">
+                    <img class="our-portifolio__image" src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=900&q=80" alt="">
+                </a>
+                <div class="carousel__item__inner-info">
+                    <p class="carousel__item__project-type">[ Category ]</p>
+                    <p class="carousel__item__project-description">[ Project Name 01 ]</p>
+                    <a href="#" class="explore-project-link">Explore the project
+                        <svg class="explore-project-link__chevron" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <svg class="carousel__item__background-pattern" viewBox="0 0 107 78">
+                        <path d="M0 78 L0 60 Q0 48 14 48 L18 48 L18 78 Z M30 78 L30 0 L48 0 L48 78 Z M60 78 L60 16 Q60 0 76 0 L78 0 L78 78 Z M89 78 L89 0 L107 0 L107 78 Z"/>
+                    </svg>
+                </div>
+            </li>
+            <li class="swiper-slide carousel__item">
+                <a href="#" class="carousel__item__project-link">
+                    <img class="our-portifolio__image" src="https://images.unsplash.com/photo-1600566753051-6057f1a8ec33?w=900&q=80" alt="">
+                </a>
+                <div class="carousel__item__inner-info">
+                    <p class="carousel__item__project-type">[ Category ]</p>
+                    <p class="carousel__item__project-description">[ Project Name 02 ]</p>
+                    <a href="#" class="explore-project-link">Explore the project
+                        <svg class="explore-project-link__chevron" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <svg class="carousel__item__background-pattern" viewBox="0 0 107 78">
+                        <path d="M0 78 L0 60 Q0 48 14 48 L18 48 L18 78 Z M30 78 L30 0 L48 0 L48 78 Z M60 78 L60 16 Q60 0 76 0 L78 0 L78 78 Z M89 78 L89 0 L107 0 L107 78 Z"/>
+                    </svg>
+                </div>
+            </li>
+            <li class="swiper-slide carousel__item">
+                <a href="#" class="carousel__item__project-link">
+                    <img class="our-portifolio__image" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&q=80" alt="">
+                </a>
+                <div class="carousel__item__inner-info">
+                    <p class="carousel__item__project-type">[ Category ]</p>
+                    <p class="carousel__item__project-description">[ Project Name 03 ]</p>
+                    <a href="#" class="explore-project-link">Explore the project
+                        <svg class="explore-project-link__chevron" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <svg class="carousel__item__background-pattern" viewBox="0 0 107 78">
+                        <path d="M0 78 L0 60 Q0 48 14 48 L18 48 L18 78 Z M30 78 L30 0 L48 0 L48 78 Z M60 78 L60 16 Q60 0 76 0 L78 0 L78 78 Z M89 78 L89 0 L107 0 L107 78 Z"/>
+                    </svg>
+                </div>
+            </li>
+            <li class="swiper-slide carousel__item">
+                <a href="#" class="carousel__item__project-link">
+                    <img class="our-portifolio__image" src="https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=900&q=80" alt="">
+                </a>
+                <div class="carousel__item__inner-info">
+                    <p class="carousel__item__project-type">[ Category ]</p>
+                    <p class="carousel__item__project-description">[ Project Name 04 ]</p>
+                    <a href="#" class="explore-project-link">Explore the project
+                        <svg class="explore-project-link__chevron" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <svg class="carousel__item__background-pattern" viewBox="0 0 107 78">
+                        <path d="M0 78 L0 60 Q0 48 14 48 L18 48 L18 78 Z M30 78 L30 0 L48 0 L48 78 Z M60 78 L60 16 Q60 0 76 0 L78 0 L78 78 Z M89 78 L89 0 L107 0 L107 78 Z"/>
+                    </svg>
+                </div>
+            </li>
+            <li class="swiper-slide carousel__item">
+                <a href="#" class="carousel__item__project-link">
+                    <img class="our-portifolio__image" src="https://images.unsplash.com/photo-1600566753104-685f4f24cb4d?w=900&q=80" alt="">
+                </a>
+                <div class="carousel__item__inner-info">
+                    <p class="carousel__item__project-type">[ Category ]</p>
+                    <p class="carousel__item__project-description">[ Project Name 05 ]</p>
+                    <a href="#" class="explore-project-link">Explore the project
+                        <svg class="explore-project-link__chevron" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <svg class="carousel__item__background-pattern" viewBox="0 0 107 78">
+                        <path d="M0 78 L0 60 Q0 48 14 48 L18 48 L18 78 Z M30 78 L30 0 L48 0 L48 78 Z M60 78 L60 16 Q60 0 76 0 L78 0 L78 78 Z M89 78 L89 0 L107 0 L107 78 Z"/>
+                    </svg>
+                </div>
+            </li>
+            <li class="swiper-slide carousel__item">
+                <a href="#" class="carousel__item__project-link">
+                    <img class="our-portifolio__image" src="https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=900&q=80" alt="">
+                </a>
+                <div class="carousel__item__inner-info">
+                    <p class="carousel__item__project-type">[ Category ]</p>
+                    <p class="carousel__item__project-description">[ Project Name 06 ]</p>
+                    <a href="#" class="explore-project-link">Explore the project
+                        <svg class="explore-project-link__chevron" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <svg class="carousel__item__background-pattern" viewBox="0 0 107 78">
+                        <path d="M0 78 L0 60 Q0 48 14 48 L18 48 L18 78 Z M30 78 L30 0 L48 0 L48 78 Z M60 78 L60 16 Q60 0 76 0 L78 0 L78 78 Z M89 78 L89 0 L107 0 L107 78 Z"/>
+                    </svg>
+                </div>
+            </li>
+            <li class="swiper-slide carousel__item">
+                <a href="#" class="carousel__item__project-link">
+                    <img class="our-portifolio__image" src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=900&q=80" alt="">
+                </a>
+                <div class="carousel__item__inner-info">
+                    <p class="carousel__item__project-type">[ Category ]</p>
+                    <p class="carousel__item__project-description">[ Project Name 07 ]</p>
+                    <a href="#" class="explore-project-link">Explore the project
+                        <svg class="explore-project-link__chevron" viewBox="0 0 48 48" fill="none"><path d="M10 24h28M28 14l10 10-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <svg class="carousel__item__background-pattern" viewBox="0 0 107 78">
+                        <path d="M0 78 L0 60 Q0 48 14 48 L18 48 L18 78 Z M30 78 L30 0 L48 0 L48 78 Z M60 78 L60 16 Q60 0 76 0 L78 0 L78 78 Z M89 78 L89 0 L107 0 L107 78 Z"/>
+                    </svg>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="carousel__timing-bar" id="js_carousel-timing-bar" style="--progress: 0%"></div>
+</section>
+
+<!-- ============== CONTACT ============== -->
+<section id="contact" class="contact-section">
+    <div class="contact-section__content">
+        <form class="contact-form js_animate-on-viewport" onsubmit="event.preventDefault(); alert('Message sent!');">
+            <h2 class="contact-form__title">Get in touch</h2>
+            <label class="input"><input class="input__control" type="text" placeholder="Your fullname *" required></label>
+            <label class="input"><input class="input__control" type="email" placeholder="Your email *" required></label>
+            <label class="input"><input class="input__control" type="tel" placeholder="Phone *" required></label>
+            <label class="input"><textarea class="input__control" placeholder="Your message"></textarea></label>
+            <button type="submit" class="button contact-form__submit-button">Send Message</button>
+        </form>
+
+        <address class="contact__address-section js_animate-on-viewport">
+            <h3>Studio</h3>
+            <a href="tel:+0000000000" class="contact__info-line">[ Phone ]</a>
+            <a href="mailto:hello@studio.com" class="contact__info-line">[ Email ]</a>
+            <p class="contact__address">
+                [ Street, number ]<br>
+                [ Neighborhood ]<br>
+                [ Postal code ]<br>
+                [ City — Country ]
+            </p>
+        </address>
+    </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer class="footer-container">
+    <div class="footer">
+        <div class="js_animate-on-viewport">
+            <div class="footer__logo">
+                <svg class="footer__logo__icon" viewBox="0 0 107 78" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 78 L0 60 Q0 48 14 48 L18 48 L18 78 Z M30 78 L30 0 L48 0 L48 78 Z M60 78 L60 16 Q60 0 76 0 L78 0 L78 78 Z M89 78 L89 0 L107 0 L107 78 Z"/>
+                </svg>
+            </div>
+            <p class="footer__about">[ Studio tagline ]</p>
+        </div>
+
+        <nav class="js_animate-on-viewport">
+            <p class="footer__section-title">Home</p>
+            <ul class="footer-nav__link-list">
+                <li><a class="footer-nav__link" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></li>
+                <li><a class="footer-nav__link" href="#portfolio">Projects</a></li>
+                <li><a class="footer-nav__link" href="#about">About</a></li>
+                <li><a class="footer-nav__link" href="#contact">Contact</a></li>
+                <li><a class="footer-nav__link" href="#">Media</a></li>
+            </ul>
+        </nav>
+
+        <address class="js_animate-on-viewport" style="font-style: normal;">
+            <h3 class="footer__section-title">Information</h3>
+            <a href="tel:+0000000000" class="footer__tel">Phone: [ number ]</a>
+            <a href="mailto:hello@studio.com" class="footer__email">[ email ]</a>
+            <p class="footer__address">
+                [ Street, number ]<br>
+                [ Neighborhood — Postal code ]<br>
+                [ Building / office ]<br>
+                [ City — Country ]
+            </p>
+        </address>
+
+        <ul class="social-medias js_animate-on-viewport">
+            <li><a href="#" aria-label="Facebook"><svg class="social-medias__icon" viewBox="0 0 16 31" xmlns="http://www.w3.org/2000/svg"><path d="M0.5 16.5h3.4v13.9c0 .3.2.5.5.5h5.7c.3 0 .5-.2.5-.5V16.5h3.9c.2 0 .5-.2.5-.4l.6-5.1c0-.1 0-.3-.1-.4-.1-.1-.2-.2-.4-.2h-4.5V7.2c0-1 .5-1.5 1.5-1.5h3c.3 0 .5-.2.5-.5V.6c0-.3-.2-.5-.5-.5h-4c-.1 0-1.1-.1-2.3-.1-1.7 0-3.4.5-4.7 2.4-1.4 2.1-1.3 4.5-1.2 4.7v3.4H.5C.2 10.4 0 10.6 0 10.9V16C0 16.3.2 16.5.5 16.5z"/></svg></a></li>
+            <li><a href="#" aria-label="Instagram"><svg class="social-medias__icon" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><path d="M23.7 5.5c-1 0-1.8.8-1.8 1.8s.8 1.8 1.8 1.8 1.8-.8 1.8-1.8-.8-1.8-1.8-1.8zM15.6 7.9c-4.2 0-7.6 3.4-7.6 7.6s3.4 7.6 7.6 7.6 7.6-3.4 7.6-7.6-3.4-7.6-7.6-7.6zm0 12.5c-2.7 0-4.9-2.2-4.9-4.9s2.2-4.9 4.9-4.9 4.9 2.2 4.9 4.9-2.2 4.9-4.9 4.9zM21.7 31H9.3C4.2 31 0 26.8 0 21.7V9.3C0 4.2 4.2 0 9.3 0h12.4C26.8 0 31 4.2 31 9.3v12.4c0 5.1-4.2 9.3-9.3 9.3zM9.3 2.9c-3.5 0-6.4 2.9-6.4 6.4v12.4c0 3.5 2.9 6.4 6.4 6.4h12.4c3.5 0 6.4-2.9 6.4-6.4V9.3c0-3.5-2.9-6.4-6.4-6.4H9.3z"/></svg></a></li>
+            <li><a href="#" aria-label="Pinterest"><svg class="social-medias__icon" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg"><path d="M44.3 22.5c0 12.2-9.8 22-22 22-2.3 0-4.5-.3-6.5-1 .9-1.5 2.2-3.9 2.7-5.8.3-1 1.4-5.2 1.4-5.2.7 1.4 2.8 2.5 5 2.5 6.6 0 11.4-6.1 11.4-13.7 0-7.3-5.9-12.7-13.6-12.7-9.5 0-14.5 6.4-14.5 13.3 0 3.2 1.7 7.2 4.4 8.5.4.2.6.1.7-.3.1-.3.5-1.8.6-2.5 0-.2 0-.4-.1-.6-.9-1.1-1.6-3.1-1.6-5 0-4.9 3.7-9.6 9.9-9.6 5.4 0 9.2 3.7 9.2 9 0 6-3 10.1-7 10.1-2.2 0-3.8-1.8-3.3-4 .6-2.6 1.8-5.4 1.8-7.3 0-1.7-.9-3.1-2.8-3.1-2.2 0-4 2.3-4 5.3 0 2 .7 3.3.7 3.3s-2.2 9.2-2.6 10.9c-.4 1.9-.2 4.6 0 6.3-8.2-3.2-14-11.2-14-20.5C.3 10.3 10.1.5 22.3.5c12.1 0 21.9 9.8 21.9 22z"/></svg></a></li>
+            <li><a href="#" aria-label="Behance"><svg class="social-medias__icon" viewBox="0 0 45 29" xmlns="http://www.w3.org/2000/svg"><path d="M18.6 13c2.4-1.2 3.7-3 3.7-5.6C22.3 2 18.3.7 13.6.7H.9V27.8H14c4.9 0 9.5-2.4 9.5-7.9 0-3.4-1.6-5.9-4.9-6.9zM6.8 5.3h5.6c2.1 0 4.1.6 4.1 3.1 0 2.3-1.5 3.2-3.6 3.2H6.8V5.3zm6.4 17.9H6.8v-7.5h6.5c2.6 0 4.3 1.1 4.3 3.9 0 2.7-2 3.6-4.4 3.6zM40.6 4.8H29.6V2.1h11v2.7zm4.3 13.4c0-5.8-3.4-10.6-9.5-10.6-6 0-10 4.5-10 10.4 0 6.1 3.8 10.3 10 10.3 4.7 0 7.7-2.1 9.2-6.6h-4.8c-.5 1.7-2.6 2.5-4.2 2.5-3.2 0-4.8-1.8-4.8-5h14.1zm-14.2-2.4c.2-2.6 1.9-4.2 4.5-4.2 2.7 0 4.1 1.6 4.3 4.2h-8.8z"/></svg></a></li>
+            <li><a href="#" aria-label="TikTok"><svg class="social-medias__icon" viewBox="0 0 45 51" xmlns="http://www.w3.org/2000/svg"><path d="M44.4 20.95c-4.33.01-8.55-1.34-12.07-3.86V34.65c0 3.25-.99 6.43-2.85 9.1-1.85 2.67-4.48 4.71-7.52 5.85-3.05 1.14-6.37 1.32-9.52.52-3.15-.8-5.98-2.54-8.12-4.99-2.13-2.45-3.47-5.5-3.83-8.73-.36-3.23.28-6.5 1.83-9.36 1.55-2.86 3.93-5.18 6.83-6.65 2.9-1.47 6.18-2.01 9.4-1.57v8.83c-1.47-.46-3.06-.45-4.52.04-1.47.49-2.74 1.43-3.64 2.69-.9 1.26-1.38 2.77-1.37 4.31.01 1.55.51 3.05 1.42 4.3 1.85 2.52 4.71 4.06 7.83 4.06 3.12 0 5.99-1.54 7.85-4.06.91-1.25 1.4-2.75 1.4-4.3V.33h8.65c0 .73.06 1.46.19 2.18.3 1.6.93 3.13 1.84 4.49.91 1.36 2.09 2.51 3.46 3.4 1.95 1.29 4.24 1.98 6.58 1.98v8.58z"/></svg></a></li>
+        </ul>
+    </div>
+    <div class="footer-bottom">© 2025 [ STUDIO NAME ] — All rights reserved</div>
+</footer>
+
+<!-- ============== SCRIPTS ============== -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+// ---------- HERO SLIDESHOW ----------
+const heroSlides = document.querySelectorAll('.home__bg-slide');
+const heroThumbs = document.querySelectorAll('.home__action__bg img');
+const heroSubtitle = document.getElementById('hero-subtitle');
+let heroIdx = 0;
+const HERO_INTERVAL = 5500;
+
+function showHero(i) {
+    heroSlides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    const next = (i + 1) % heroSlides.length;
+    heroThumbs.forEach((t, idx) => t.classList.toggle('active', idx === next));
+    const subtitle = heroSlides[i].dataset.subtitle;
+    if (subtitle && heroSubtitle) {
+        heroSubtitle.style.opacity = '0';
+        setTimeout(() => {
+            heroSubtitle.textContent = subtitle;
+            heroSubtitle.style.opacity = '1';
+        }, 300);
+    }
+}
+function nextHero() {
+    heroIdx = (heroIdx + 1) % heroSlides.length;
+    showHero(heroIdx);
+}
+let heroTimer = setInterval(nextHero, HERO_INTERVAL);
+document.getElementById('js_bg-slide-button').addEventListener('click', () => {
+    clearInterval(heroTimer);
+    nextHero();
+    heroTimer = setInterval(nextHero, HERO_INTERVAL);
+});
+
+// ---------- SERVICES SLIDER ----------
+const serviceInfos = document.querySelectorAll('.our-services__slide__item-info');
+const serviceImgs = document.querySelectorAll('.our-services__slide__item');
+let svcIdx = 0;
+function showService(i) {
+    serviceInfos.forEach((el, idx) => el.classList.toggle('selected', idx === i));
+    serviceImgs.forEach((el, idx) => el.classList.toggle('selected', idx === i));
+}
+document.getElementById('js_button-next-item').addEventListener('click', () => {
+    svcIdx = (svcIdx + 1) % serviceInfos.length;
+    showService(svcIdx);
+});
+document.getElementById('js_button-prev-item').addEventListener('click', () => {
+    svcIdx = (svcIdx - 1 + serviceInfos.length) % serviceInfos.length;
+    showService(svcIdx);
+});
+
+// ---------- PORTFOLIO SWIPER ----------
+const SWIPER_DELAY = 4500;
+const portfolioSwiper = new Swiper('.portfolio-swiper', {
+    slidesPerView: 'auto',
+    spaceBetween: 80,
+    centeredSlides: true,
+    loop: true,
+    speed: 900,
+    grabCursor: true,
+    autoplay: { delay: SWIPER_DELAY, disableOnInteraction: false },
+});
+
+const timingBar = document.getElementById('js_carousel-timing-bar');
+let timingStart = Date.now();
+function tickTiming() {
+    const elapsed = (Date.now() - timingStart) % SWIPER_DELAY;
+    const pct = (elapsed / SWIPER_DELAY) * 100;
+    timingBar.style.setProperty('--progress', pct + '%');
+    requestAnimationFrame(tickTiming);
+}
+portfolioSwiper.on('slideChange', () => { timingStart = Date.now(); });
+requestAnimationFrame(tickTiming);
+
+// ---------- SCROLL-IN ANIMATIONS ----------
+const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.js_animate-on-viewport').forEach(el => io.observe(el));
+
+if (heroSubtitle) { heroSubtitle.style.transition = 'opacity 0.3s'; }
+</script>
+
+</body>
+</html>
